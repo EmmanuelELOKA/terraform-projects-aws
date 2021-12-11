@@ -9,9 +9,6 @@ variable "cidr" {
   type        = string
   default     = "10.0.0.0/16"
 }
-
-
-
 variable "instance_type" {
   description = "Value of the regions"
   type        = string
