@@ -1,0 +1,19 @@
+# Type: Ansible Task
+# Purpose: Take a snapshot of EC2 root volume
+# Date & Time: June 22, 2022 
+# Author: Praful Patel
+# ------------------------------------------
+---      
+- name: Creating EC2 root volume snapshot 
+  ec2_snapshot:
+    aws_region: us-east-1
+    instance_id: i-083f1f58efe33d05d
+    device_name: /dev/xvda
+    description: snapshot of /web-server data taken 2013/11/22 12:18:32
+    snapshot_tags:
+        frequency: hourly
+        source: /root_volume_data
+ 
+    
+   
+       

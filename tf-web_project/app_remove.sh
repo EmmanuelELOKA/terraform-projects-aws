@@ -7,4 +7,4 @@
 rm -rfv /var/www/html/*
 cd /var/www/html/
 ls -la
-echo "FILED and FOLDER REMOVED SUCCESSFULLY FROM ROOT DIRECTORY "
+echo "FILES and FOLDER REMOVED SUCCESSFULLY FROM ROOT DIRECTORY "

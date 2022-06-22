@@ -1,0 +1,18 @@
+# Type: Main Ansible Playbook
+# Purpose: This is a common playbook file which will call to multiple tasks from /tasks folder 
+# Attachments: 
+# Author: Praful Patel
+# Date & Time: June, 22, 2022 
+# ------------------------------------------
+
+- name: Read the ec2 instance and take the volume snapshot
+  hosts: localhost
+  gather_facts: true
+  connection: local
+  tasks:
+    - include: tasks/ec2_snapshot.yml
+      tags: snapshot
+    
+
+
+      
