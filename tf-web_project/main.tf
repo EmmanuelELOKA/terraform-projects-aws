@@ -9,52 +9,52 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }
 
 # Create VPC
-resource "aws_vpc" "PrafulVPC" {
-  cidr_block           = "10.0.0.0/16"
+resource "aws_vpc" "PowerFactorsVPC" {
+  cidr_block           = "100.30.0.0/16"
   instance_tenancy     = "default"
   enable_dns_hostnames = "true"
   enable_dns_support   = "true"
 
   tags = {
-    Name = "PrafulVPC"
+    Name = "PowerFactorsVPC"
   }
 }
 
 # Create Public Subnet
-resource "aws_subnet" "PublicSubnet" {
-  vpc_id     = aws_vpc.PrafulVPC.id
-  cidr_block = "10.0.1.0/24"
+resource "aws_subnet" "PowerFactorsPublicSubnet" {
+  vpc_id     = aws_vpc.PowerFactorsVPC.id
+  cidr_block = "100.30.1.0/24"
 
   tags = {
-    Name = "PublicSubnet"
+    Name = "PowerFactorsPublicSubnet"
   }
 }
 
 # Create Internet Gateway 
-resource "aws_internet_gateway" "Praful_IGW" {
-  vpc_id = aws_vpc.PrafulVPC.id
+resource "aws_internet_gateway" "PowerFactors_IGW" {
+  vpc_id = aws_vpc.PowerFactorsVPC.id
 
   tags = {
-    Name = "Praful_IGW"
+    Name = "PowerFactors_IGW"
   }
 }
 
 
 # Create Route Table
-resource "aws_route_table" "Public_RT" {
-  vpc_id = aws_vpc.PrafulVPC.id
+resource "aws_route_table" "PowerFactorsPublic_RT" {
+  vpc_id = aws_vpc.PowerFactorsVPC.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.Praful_IGW.id
+    gateway_id = aws_internet_gateway.PowerFactors_IGW.id
   }
 
   tags = {
-    Name = "Public_RT"
+    Name = "PowerFactorsPublic_RT"
   }
 }
 
@@ -62,16 +62,16 @@ resource "aws_route_table" "Public_RT" {
 # Route table association
 
 resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.PublicSubnet.id
-  route_table_id = aws_route_table.Public_RT.id
+  subnet_id      = aws_subnet.PowerFactorsPublicSubnet.id
+  route_table_id = aws_route_table.PowerFactorsPublic_RT.id
 }
 
 # Public Security Group
 
-resource "aws_security_group" "Public_SG" {
+resource "aws_security_group" "PowerFactorsPublic_SG" {
   name        = "allow_traffic from internet"
   description = "Allow http inbound traffic"
-  vpc_id      = aws_vpc.PrafulVPC.id
+  vpc_id      = aws_vpc.PowerFactorsVPC.id
 
   ingress {
     description = "ssh from VPC"
@@ -107,12 +107,12 @@ resource "aws_security_group" "Public_SG" {
 # Create Web Server 
 
 resource "aws_instance" "Web_server" {
-  ami                                  = "ami-04902260ca3d33422"
+  ami                                  = "ami-02d1e544b84bf7502"
   instance_type                        = "t2.micro"
   associate_public_ip_address          = true
-  key_name                             = "aws-key"
-  vpc_security_group_ids               = [aws_security_group.Public_SG.id]
-  subnet_id                            = aws_subnet.PublicSubnet.id
+  key_name                             = "disaster-keypair"
+  vpc_security_group_ids               = [aws_security_group.PowerFactorsPublic_SG.id]
+  subnet_id                            = aws_subnet.PowerFactorsPublicSubnet.id
   user_data                            = file("user-data-apache.sh")
   instance_initiated_shutdown_behavior = "terminate"
   root_block_device {
