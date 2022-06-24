@@ -8,3 +8,5 @@ rm -rfv /var/www/html/*
 cd /var/www/html/
 ls -la
 echo "FILES and FOLDER REMOVED SUCCESSFULLY FROM ROOT DIRECTORY "
+
+# aws cloudwatch set-alarm-state --alarm-name 'WebServer_Alarm' --state-value ALARM --state-reason 'Simulate an EC2 HW failure'
